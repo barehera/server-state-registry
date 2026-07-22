@@ -14,11 +14,61 @@
     ],
     [
       "@semantic-release/release-notes-generator",
-      { "preset": "conventionalcommits" }
+      {
+        "preset": "conventionalcommits",
+        "presetConfig": {
+          "types": [
+            { "type": "feat", "section": "Features", "hidden": false },
+            { "type": "fix", "section": "Fixes", "hidden": false },
+            {
+              "type": "docs",
+              "section": "Documentation",
+              "hidden": false
+            },
+            {
+              "type": "refactor",
+              "section": "Refactoring",
+              "hidden": false
+            },
+            {
+              "type": "perf",
+              "section": "Performance",
+              "hidden": false
+            },
+            {
+              "type": "build",
+              "section": "Build system",
+              "hidden": false
+            },
+            {
+              "type": "ci",
+              "section": "Continuous integration",
+              "hidden": false
+            },
+            {
+              "type": "test",
+              "section": "Tests",
+              "hidden": false
+            },
+            {
+              "type": "chore",
+              "section": "Maintenance",
+              "hidden": false
+            },
+            { "type": "revert", "section": "Reverts", "hidden": false }
+          ]
+        },
+        "writerOpts": {
+          "headerPartial": "\n",
+          "commitsSort": ["scope", "subject"]
+        }
+      }
     ],
     [
       "@semantic-release/github",
       {
+        "releaseNameTemplate": "<%= nextRelease.version %>",
+        "releaseBodyTemplate": "An adaptive Agent Skill for creating, extending, refactoring, and auditing type-safe React server state without forcing a project layout or backend contract.\n\n### Install or update\n\n```bash\nnpx shadcn@latest add barehera/server-state-registry/manage-react-server-state --overwrite\n```\n\nThis installs the canonical skill under `.agents/skills` and its thin Cursor adapter. It does not install runtime dependencies or write application code into `src`.\n\n### Changes\n\n<%= nextRelease.notes.trim() || 'No user-facing changes were recorded for this release.' %>\n\n### Release asset\n\n- `manage-react-server-state.json` — the built shadcn registry item for this exact release.\n\n<% if (lastRelease.gitTag) { %>### Compare\n\n[View all changes from <%= lastRelease.gitTag %> to <%= nextRelease.gitTag %>](https://github.com/barehera/server-state-registry/compare/<%= lastRelease.gitTag %>...<%= nextRelease.gitTag %>)\n<% } %>",
         "assets": [
           {
             "path": "public/r/manage-react-server-state.json",

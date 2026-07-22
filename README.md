@@ -335,7 +335,9 @@ The first qualifying release starts at the stable semantic version:
 manage-react-server-state-v1.0.0
 ```
 
-Later releases are calculated from the latest matching tag, for example `v1.0.1`, `v1.1.0`, or `v2.0.0`. The complete tag remains namespaced as `manage-react-server-state-v<version>`.
+Later releases are calculated from the latest matching tag, for example `manage-react-server-state-v1.0.1`, `manage-react-server-state-v1.1.0`, or `manage-react-server-state-v2.0.0`. Existing namespaced tags are preserved as semantic-release history, while GitHub displays the release title as the version number only, such as `1.1.0`.
+
+Every release body includes the skill description, latest installation command, categorized Conventional Commit notes, exact registry asset description, and a comparison link when a previous version exists. Documentation and refactoring commits are included instead of producing an empty release body.
 
 The root `package.json` uses `0.0.0-development` intentionally; Git tags and GitHub Releases are the version source of truth. Do not manually edit the package version or create release tags. Use a Conventional Commit and let the workflow calculate the release.
 
