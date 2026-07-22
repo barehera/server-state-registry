@@ -1,9 +1,17 @@
 {
   "name": "server-state-registry",
-  "version": "0.1.0",
+  "version": "0.0.0-development",
   "private": true,
   "type": "module",
   "scripts": {
-    "validate": "node scripts/validate-registry.mjs"
+    "registry:build": "shadcn build",
+    "shadcn": "shadcn",
+    "release": "semantic-release",
+    "validate": "node scripts/validate-registry.mjs && npm run registry:build"
+  },
+  "devDependencies": {
+    "conventional-changelog-conventionalcommits": "^10.2.1",
+    "semantic-release": "^25.0.8",
+    "shadcn": "^4.13.1"
   }
 }
