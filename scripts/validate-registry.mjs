@@ -90,7 +90,7 @@ if (
   !releaseConfig.branches?.includes("main") ||
   releaseConfig.tagFormat !== "manage-react-server-state-v${version}" ||
   githubReleaseOptions?.releaseNameTemplate !==
-    "<%= nextRelease.version %>" ||
+    "v<%= nextRelease.version %>" ||
   !githubReleaseOptions?.releaseBodyTemplate?.includes("### Changes") ||
   !githubReleaseOptions?.releaseBodyTemplate?.includes("### Install or update")
 ) {
@@ -101,7 +101,7 @@ const skillPath = resolve(
   root,
   "skills/manage-react-server-state/SKILL.md",
 );
-const skill = await readFile(skillPath, "utf8");
+const skill = (await readFile(skillPath, "utf8")).replaceAll("\r\n", "\n");
 
 if (skill.includes("TODO")) {
   throw new Error("The Agent Skill still contains TODO placeholders");

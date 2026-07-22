@@ -67,7 +67,7 @@
     [
       "@semantic-release/github",
       {
-        "releaseNameTemplate": "<%= nextRelease.version %>",
+        "releaseNameTemplate": "v<%= nextRelease.version %>",
         "releaseBodyTemplate": "An adaptive Agent Skill for creating, extending, refactoring, and auditing type-safe React server state without forcing a project layout or backend contract.\n\n### Install or update\n\n```bash\nnpx shadcn@latest add barehera/server-state-registry/manage-react-server-state --overwrite\n```\n\nThis installs the canonical skill under `.agents/skills` and its thin Cursor adapter. It does not install runtime dependencies or write application code into `src`.\n\n### Changes\n\n<%= nextRelease.notes.trim() || 'No user-facing changes were recorded for this release.' %>\n\n### Release asset\n\n- `manage-react-server-state.json` — the built shadcn registry item for this exact release.\n\n<% if (lastRelease.gitTag) { %>### Compare\n\n[View all changes from <%= lastRelease.gitTag %> to <%= nextRelease.gitTag %>](https://github.com/barehera/server-state-registry/compare/<%= lastRelease.gitTag %>...<%= nextRelease.gitTag %>)\n<% } %>",
         "assets": [
           {
