@@ -1,50 +1,42 @@
 # Mutations and cache
 
-## Mutation hooks
+## Mutation ownership
 
-Create one named hook per mutation file. The hook owns `useMutation`, obtains `QueryClient`, calls the feature API namespace, and delegates reusable cache behavior to the feature cache namespace.
+Follow the project's public API style. A mutation hook normally owns `useMutation`, calls the transport operation, obtains the QueryClient, and applies the endpoint's actual cache effects. Separate reusable cache actions when more than one mutation or workflow needs them; keep a simple one-off update local when extraction adds no clarity.
 
-```ts
-export function useUpdateMemoryMutation() {
-  const queryClient = useQueryClient();
+Use the backend result and mutation variables. Do not broadly invalidate every resource by habit.
 
-  return useMutation({
-    mutationFn: async (input: MemoryUpdateInput) =>
-      (await memoriesApi.update(input)).data,
-    onSuccess: (updatedMemory) => {
-      memoriesCache.setDetail({ queryClient, memory: updatedMemory });
-      return memoriesCache.invalidateLists({ queryClient });
-    },
-  });
-}
-```
+## Cache semantics
 
-Use the actual backend result and mutation variables. Do not create broad invalidation by habit; synchronize only affected caches.
+- `set`: write a complete value when the response is sufficient.
+- `patch`: merge partial data into an existing value; do not seed an invalid entity.
+- `invalidate`: mark affected queries stale and optionally refetch according to Query policy.
+- `remove`: erase cache entries after deletion or loss of access.
+- `delete`: reserve for the network mutation.
 
-## Cache namespace
+Build cache identities through the same key source as reads. Account for finite, infinite, filtered, detail, and context caches as different shapes.
 
-Keep cache mechanics in `cache.ts`:
+## Choosing mutation effects
 
-- `setDetail` accepts the complete entity returned by the backend.
-- `patchDetail` accepts partial data and updates only an existing cached entity unless the contract provides enough data to seed one safely.
-- `invalidateLists` invalidates finite and infinite collection roots.
-- Context invalidation uses a typed key predicate from `utils.ts` when no direct factory root represents all matching contexts.
-- `removeDetail` removes a cache entry after successful backend deletion.
+Derive effects from the contract and UX:
 
-Cache actions accept object inputs containing `queryClient` and required values. Build keys through the query-key factory; never recreate key arrays manually.
+- Create: seed detail only if a complete entity is returned; invalidate or patch relevant collections.
+- Update: set detail from a complete response or patch known fields; refresh collections whose sorting/filter membership may change.
+- Delete: remove detail and update/invalidate collections and dependent contexts.
+- Relationship mutation: update/invalidate the relationship context and any count displayed elsewhere.
+
+Ask when business behavior is unknowable, such as whether an update changes list membership or whether the backend returns a complete entity.
 
 ## Optimistic updates
 
-Use an optimistic update only when the interaction benefits materially and rollback semantics are clear:
+Use optimistic state only when the interaction benefits and rollback is well-defined:
 
-1. Cancel affected queries.
-2. Snapshot the exact cached data.
-3. Apply the optimistic write through a cache action or a tightly scoped updater.
-4. Restore the snapshot on error, including valid falsy/empty snapshots.
-5. Reconcile with invalidation or the server response on settlement.
+1. Cancel the exact affected queries.
+2. Snapshot every shape that will change.
+3. Apply the smallest optimistic change.
+4. Restore snapshots on error, including valid empty/falsy data.
+5. Reconcile with the server result or targeted invalidation.
 
-Do not copy a single optimistic-list recipe across paginated, infinite, filtered, and detail caches. Their shapes and affected key sets differ.
+Do not copy one optimistic recipe across detail, filtered list, and infinite pages.
 
-## Error behavior
-
-Prefer project-wide mutation error handling when it exists. Add feature-specific messages or reporting only when the operation needs different behavior. Do not bake a vendor logger, translation library, or toast library into the reusable architecture.
+Prefer existing project-wide error reporting. Do not introduce a toast, logging, or translation dependency inside reusable server-state code without a project requirement.

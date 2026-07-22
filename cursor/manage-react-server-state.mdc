@@ -1,9 +1,10 @@
 ---
-description: Apply the shared type-safe React server-state architecture when creating, changing, refactoring, or auditing API features, TanStack Query code, query keys, hooks, mutations, schemas, pagination, streams, authentication guards, or cache behavior.
+description: Create or adapt type-safe React server-state code to this project's existing structure, backend contracts, transport, validation, authentication, naming, and cache behavior.
 globs:
-  - "src/server-state/**/*.{ts,tsx}"
-  - "src/features/*/server-state/**/*.{ts,tsx}"
+  - "**/server-state/**/*.{ts,tsx}"
+  - "**/*query*.{ts,tsx}"
+  - "**/*mutation*.{ts,tsx}"
 alwaysApply: false
 ---
 
-Read and follow `@.agents/skills/manage-react-server-state/SKILL.md` before changing server-state code. Load only the referenced guidance required for the current workflow. Inspect the project's actual backend and auth contracts; do not infer them from the memory example.
+Read and follow `@.agents/skills/manage-react-server-state/SKILL.md` before changing remote-state code. Inspect the repository first, load only the references required for the task, and adapt the semantic responsibilities to the project's existing structure. Treat bundled examples as references, never automatic templates.

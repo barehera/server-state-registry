@@ -1,56 +1,69 @@
-# Workflows
+# Workflows and questions
+
+## Question policy
+
+Inspect first. Ask only when an unresolved answer changes routes, types, placement, dependencies, authentication, pagination, cache behavior, or public compatibility.
+
+Useful compact questions include:
+
+- Contract: “What are the exact method, route, request fields, success body, and error body? A response example is enough.”
+- Pagination: “Is this cursor, offset, or page based, and which response value indicates the next request?”
+- Authentication: “Is this endpoint public or protected, and which existing auth hook/client should gate it?”
+- Cache: “Does the mutation return the complete entity, and which visible collections or relationships can it change?”
+- New architecture: “I found no existing server-state convention. May I use feature-colocated files and the current transport, or do you prefer a layer-based layout?”
+- Dependency: “The project has no runtime validation/key factory. Should I add the proposed dependency or implement with existing tools?”
+
+Do not ask users to choose between implementation details they delegated. Recommend one option with a reason and proceed when the choice is reversible and within scope.
+
+## Create from scratch
+
+1. Inspect framework, source roots, aliases, transport, QueryClient, auth, contract sources, and repository instructions.
+2. Propose the smallest structure that can support the first real feature. Avoid speculative shared abstractions.
+3. Confirm only missing material decisions, especially contract source and allowed dependencies.
+4. Establish naming and key rules, then implement the first vertical slice end to end.
+5. Extract shared primitives only after they are actually shared or clearly project-wide.
 
 ## Create feature
 
-1. Inspect one neighboring feature and shared `src/server-state` primitives.
-2. Confirm the feature's singular/plural names and backend contract.
-3. Create `names.ts`, `schemas.ts`, and `types.ts` first.
-4. Add centralized defaults/constraints only when the feature needs them.
-5. Implement `api.ts` with runtime parsing and object inputs.
-6. Implement query keys, then query options, then one hook per read.
-7. Implement `cache.ts` from actual mutation effects.
-8. Implement one mutation hook per write.
-9. Add `utils.ts` only for real pure helpers.
-10. Validate names, dependency direction, types, lint, and build.
+1. Inspect one neighboring feature if available.
+2. Confirm singular/plural names and all endpoint contracts in scope.
+3. Choose placement by project convention.
+4. Implement contracts/types, transport, keys/options, hooks, mutations, and cache effects in dependency order.
+5. Create only files with real responsibilities.
 
 ## Add endpoint
 
-1. Inspect the feature's existing vocabulary and key hierarchy.
-2. Confirm the new endpoint contract and whether it is a root or context operation.
-3. Extend schemas/types and the feature operation names if this is a new capability.
-4. Add the API operation.
-5. Add or extend the key and option factory for reads; add a mutation hook and cache effects for writes.
-6. Add exactly one feature hook for a new read operation.
-7. Run targeted validation and ensure existing public names did not drift.
+1. Preserve the feature's existing vocabulary and placement.
+2. Determine whether the operation is a root read, a child/context read, or a write.
+3. Extend the smallest set of contract, transport, key, option, hook, and cache files.
+4. Avoid unrelated migrations and keep existing public imports stable.
 
-## Refactor feature
+## Refactor
 
-1. Inventory current public imports and component call sites.
-2. Identify concrete violations instead of replacing the entire feature automatically.
-3. Establish canonical names and ownership boundaries.
-4. Migrate schemas/types, API, keys/options, hooks, and cache in dependency order.
-5. Update call sites and remove obsolete aliases only after usage is migrated.
-6. Preserve backend behavior; do not combine a structural refactor with an invented contract change.
+1. Inventory public imports and call sites before changing structure.
+2. Identify concrete problems: duplicated keys, inconsistent naming, unsafe responses, auth leaks, cache bugs, or mixed responsibilities.
+3. Agree on migration scope when public APIs or many files will change.
+4. Migrate in dependency order and update consumers before removing old entry points.
+5. Preserve backend behavior unless a contract change is independently verified.
 
 ## Audit
 
-Report findings with file and line evidence. Check:
+Report evidence with file and line locations. Do not implement fixes unless authorized. Check:
 
-- `detail` is the only single-resource operation alias.
-- Namespace plurality and hook/result naming are consistent.
-- No barrel exports exist.
-- Public operations accept object inputs.
-- Routes and response envelopes match the backend.
-- Serialized responses are validated or an intentional generated-type trust decision is documented.
-- API functions return parsed backend shapes without unnecessary mapping.
-- Keys contain all discriminating normalized inputs.
-- Key predicates live in `utils.ts`.
-- Option factories own query functions and cache policy.
-- Hooks support typed overrides without exposing key/query function replacement.
-- Authentication is composed once and uses `skipToken` for protected requests.
+- Placement follows the project or has an explicit rationale.
+- One vocabulary is used for each operation.
+- Backend routes, request fields, and response handling match evidence.
+- Runtime validation or generated-type trust is deliberate.
+- Query keys include every discriminating input.
+- Finite and infinite data shapes do not share an identity.
+- Cancellation and auth gating prevent unintended requests.
+- Hooks/options expose a stable API without allowing identity replacement.
 - Pagination remains backend-shaped.
-- Cache operations use `set`, `patch`, `invalidate`, and `remove` precisely.
-- Defaults and constraints contain no unexplained duplicates.
-- Lint, typecheck, and build pass.
+- Mutation cache effects are targeted and complete.
+- Defaults are centralized only where repetition exists.
+- Public imports remain compatible within the requested scope.
+- Available validation commands pass.
 
-For a requested audit, do not implement fixes unless the user also authorizes changes.
+## Completion report
+
+State the selected layout, naming and contract sources, dependencies added, assumptions made, cache policy, validation performed, and any questions still blocking full correctness.

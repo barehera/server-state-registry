@@ -4,169 +4,10 @@
   "homepage": "https://github.com/barehera/server-state-registry",
   "items": [
     {
-      "name": "server-state-core",
-      "type": "registry:item",
-      "title": "Server State Core",
-      "description": "Shared project-owned transport, validation, naming, query-option, error, and streaming primitives.",
-      "dependencies": [
-        "@tanstack/react-query@^5.101.4",
-        "axios@^1.18.1",
-        "zod@^4.4.3"
-      ],
-      "files": [
-        {
-          "path": "registry/server-state-core/src/server-state/api.ts",
-          "type": "registry:file",
-          "target": "~/src/server-state/api.ts"
-        },
-        {
-          "path": "registry/server-state-core/src/server-state/constants.ts",
-          "type": "registry:file",
-          "target": "~/src/server-state/constants.ts"
-        },
-        {
-          "path": "registry/server-state-core/src/server-state/names.ts",
-          "type": "registry:file",
-          "target": "~/src/server-state/names.ts"
-        },
-        {
-          "path": "registry/server-state-core/src/server-state/schemas.ts",
-          "type": "registry:file",
-          "target": "~/src/server-state/schemas.ts"
-        },
-        {
-          "path": "registry/server-state-core/src/server-state/types.ts",
-          "type": "registry:file",
-          "target": "~/src/server-state/types.ts"
-        },
-        {
-          "path": "registry/server-state-core/src/server-state/utils.ts",
-          "type": "registry:file",
-          "target": "~/src/server-state/utils.ts"
-        }
-      ],
-      "docs": "Review the backend error and response envelopes in schemas.ts before using the core. They are project contracts, not universal API shapes."
-    },
-    {
-      "name": "authenticated-query",
-      "type": "registry:item",
-      "title": "Authenticated Query",
-      "description": "Factory for project-auth-aware finite and infinite TanStack Query hooks using enabled composition and skipToken.",
-      "dependencies": ["@tanstack/react-query@^5.101.4"],
-      "files": [
-        {
-          "path": "registry/authenticated-query/src/server-state/create-authenticated-query-hooks.ts",
-          "type": "registry:file",
-          "target": "~/src/server-state/create-authenticated-query-hooks.ts"
-        }
-      ],
-      "docs": "Create one project auth integration file that passes the real auth hook to createAuthenticatedQueryHooks. Feature hooks then import the configured useAuthenticatedQuery."
-    },
-    {
-      "name": "example-memories",
-      "type": "registry:item",
-      "title": "Memories Server State Example",
-      "description": "Complete reference feature covering finite and infinite lists, detail context queries, streaming, mutations, partial cache writes, invalidation, and removal.",
-      "dependencies": [
-        "@lukemorales/query-key-factory@^1.3.4",
-        "@tanstack/react-query@^5.101.4",
-        "axios@^1.18.1",
-        "zod@^4.4.3"
-      ],
-      "files": [
-        {
-          "path": "registry/examples/memories/src/features/memories/server-state/api.ts",
-          "type": "registry:file",
-          "target": "~/src/features/memories/server-state/api.ts"
-        },
-        {
-          "path": "registry/examples/memories/src/features/memories/server-state/cache.ts",
-          "type": "registry:file",
-          "target": "~/src/features/memories/server-state/cache.ts"
-        },
-        {
-          "path": "registry/examples/memories/src/features/memories/server-state/constants.ts",
-          "type": "registry:file",
-          "target": "~/src/features/memories/server-state/constants.ts"
-        },
-        {
-          "path": "registry/examples/memories/src/features/memories/server-state/names.ts",
-          "type": "registry:file",
-          "target": "~/src/features/memories/server-state/names.ts"
-        },
-        {
-          "path": "registry/examples/memories/src/features/memories/server-state/schemas.ts",
-          "type": "registry:file",
-          "target": "~/src/features/memories/server-state/schemas.ts"
-        },
-        {
-          "path": "registry/examples/memories/src/features/memories/server-state/types.ts",
-          "type": "registry:file",
-          "target": "~/src/features/memories/server-state/types.ts"
-        },
-        {
-          "path": "registry/examples/memories/src/features/memories/server-state/utils.ts",
-          "type": "registry:file",
-          "target": "~/src/features/memories/server-state/utils.ts"
-        },
-        {
-          "path": "registry/examples/memories/src/features/memories/server-state/queries/keys.ts",
-          "type": "registry:file",
-          "target": "~/src/features/memories/server-state/queries/keys.ts"
-        },
-        {
-          "path": "registry/examples/memories/src/features/memories/server-state/queries/options.ts",
-          "type": "registry:file",
-          "target": "~/src/features/memories/server-state/queries/options.ts"
-        },
-        {
-          "path": "registry/examples/memories/src/features/memories/server-state/queries/use-memories-infinite-list-query.ts",
-          "type": "registry:file",
-          "target": "~/src/features/memories/server-state/queries/use-memories-infinite-list-query.ts"
-        },
-        {
-          "path": "registry/examples/memories/src/features/memories/server-state/queries/use-memories-list-query.ts",
-          "type": "registry:file",
-          "target": "~/src/features/memories/server-state/queries/use-memories-list-query.ts"
-        },
-        {
-          "path": "registry/examples/memories/src/features/memories/server-state/queries/use-memories-stream-query.ts",
-          "type": "registry:file",
-          "target": "~/src/features/memories/server-state/queries/use-memories-stream-query.ts"
-        },
-        {
-          "path": "registry/examples/memories/src/features/memories/server-state/queries/use-memory-detail-query.ts",
-          "type": "registry:file",
-          "target": "~/src/features/memories/server-state/queries/use-memory-detail-query.ts"
-        },
-        {
-          "path": "registry/examples/memories/src/features/memories/server-state/queries/use-memory-related-query.ts",
-          "type": "registry:file",
-          "target": "~/src/features/memories/server-state/queries/use-memory-related-query.ts"
-        },
-        {
-          "path": "registry/examples/memories/src/features/memories/server-state/mutations/use-create-memory-mutation.ts",
-          "type": "registry:file",
-          "target": "~/src/features/memories/server-state/mutations/use-create-memory-mutation.ts"
-        },
-        {
-          "path": "registry/examples/memories/src/features/memories/server-state/mutations/use-delete-memory-mutation.ts",
-          "type": "registry:file",
-          "target": "~/src/features/memories/server-state/mutations/use-delete-memory-mutation.ts"
-        },
-        {
-          "path": "registry/examples/memories/src/features/memories/server-state/mutations/use-update-memory-mutation.ts",
-          "type": "registry:file",
-          "target": "~/src/features/memories/server-state/mutations/use-update-memory-mutation.ts"
-        }
-      ],
-      "docs": "Install server-state-core first. This is a reference backend contract, not a renameable feature template. Its protected related hook also expects a configured project auth hook."
-    },
-    {
       "name": "manage-react-server-state",
       "type": "registry:item",
       "title": "Manage React Server State Agent Skill",
-      "description": "Portable Agent Skill and Cursor adapter for creating, extending, refactoring, and auditing server-state features.",
+      "description": "Adaptive Agent Skill for creating, extending, refactoring, and auditing React server state without forcing a project layout or backend contract.",
       "files": [
         {
           "path": "skills/manage-react-server-state/SKILL.md",
@@ -209,12 +50,132 @@
           "target": "~/.agents/skills/manage-react-server-state/references/workflows.md"
         },
         {
+          "path": "skills/manage-react-server-state/references/examples.md",
+          "type": "registry:file",
+          "target": "~/.agents/skills/manage-react-server-state/references/examples.md"
+        },
+        {
+          "path": "skills/manage-react-server-state/examples/feature-colocated/src/server-state/api.ts",
+          "type": "registry:file",
+          "target": "~/.agents/skills/manage-react-server-state/examples/feature-colocated/src/server-state/api.ts"
+        },
+        {
+          "path": "skills/manage-react-server-state/examples/feature-colocated/src/server-state/constants.ts",
+          "type": "registry:file",
+          "target": "~/.agents/skills/manage-react-server-state/examples/feature-colocated/src/server-state/constants.ts"
+        },
+        {
+          "path": "skills/manage-react-server-state/examples/feature-colocated/src/server-state/create-authenticated-query-hooks.ts",
+          "type": "registry:file",
+          "target": "~/.agents/skills/manage-react-server-state/examples/feature-colocated/src/server-state/create-authenticated-query-hooks.ts"
+        },
+        {
+          "path": "skills/manage-react-server-state/examples/feature-colocated/src/server-state/names.ts",
+          "type": "registry:file",
+          "target": "~/.agents/skills/manage-react-server-state/examples/feature-colocated/src/server-state/names.ts"
+        },
+        {
+          "path": "skills/manage-react-server-state/examples/feature-colocated/src/server-state/schemas.ts",
+          "type": "registry:file",
+          "target": "~/.agents/skills/manage-react-server-state/examples/feature-colocated/src/server-state/schemas.ts"
+        },
+        {
+          "path": "skills/manage-react-server-state/examples/feature-colocated/src/server-state/types.ts",
+          "type": "registry:file",
+          "target": "~/.agents/skills/manage-react-server-state/examples/feature-colocated/src/server-state/types.ts"
+        },
+        {
+          "path": "skills/manage-react-server-state/examples/feature-colocated/src/server-state/utils.ts",
+          "type": "registry:file",
+          "target": "~/.agents/skills/manage-react-server-state/examples/feature-colocated/src/server-state/utils.ts"
+        },
+        {
+          "path": "skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/api.ts",
+          "type": "registry:file",
+          "target": "~/.agents/skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/api.ts"
+        },
+        {
+          "path": "skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/cache.ts",
+          "type": "registry:file",
+          "target": "~/.agents/skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/cache.ts"
+        },
+        {
+          "path": "skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/constants.ts",
+          "type": "registry:file",
+          "target": "~/.agents/skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/constants.ts"
+        },
+        {
+          "path": "skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/names.ts",
+          "type": "registry:file",
+          "target": "~/.agents/skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/names.ts"
+        },
+        {
+          "path": "skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/schemas.ts",
+          "type": "registry:file",
+          "target": "~/.agents/skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/schemas.ts"
+        },
+        {
+          "path": "skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/types.ts",
+          "type": "registry:file",
+          "target": "~/.agents/skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/types.ts"
+        },
+        {
+          "path": "skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/utils.ts",
+          "type": "registry:file",
+          "target": "~/.agents/skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/utils.ts"
+        },
+        {
+          "path": "skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/queries/keys.ts",
+          "type": "registry:file",
+          "target": "~/.agents/skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/queries/keys.ts"
+        },
+        {
+          "path": "skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/queries/options.ts",
+          "type": "registry:file",
+          "target": "~/.agents/skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/queries/options.ts"
+        },
+        {
+          "path": "skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/queries/use-posts-infinite-list-query.ts",
+          "type": "registry:file",
+          "target": "~/.agents/skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/queries/use-posts-infinite-list-query.ts"
+        },
+        {
+          "path": "skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/queries/use-posts-list-query.ts",
+          "type": "registry:file",
+          "target": "~/.agents/skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/queries/use-posts-list-query.ts"
+        },
+        {
+          "path": "skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/queries/use-post-detail-query.ts",
+          "type": "registry:file",
+          "target": "~/.agents/skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/queries/use-post-detail-query.ts"
+        },
+        {
+          "path": "skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/queries/use-post-related-query.ts",
+          "type": "registry:file",
+          "target": "~/.agents/skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/queries/use-post-related-query.ts"
+        },
+        {
+          "path": "skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/mutations/use-create-post-mutation.ts",
+          "type": "registry:file",
+          "target": "~/.agents/skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/mutations/use-create-post-mutation.ts"
+        },
+        {
+          "path": "skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/mutations/use-update-post-mutation.ts",
+          "type": "registry:file",
+          "target": "~/.agents/skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/mutations/use-update-post-mutation.ts"
+        },
+        {
+          "path": "skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/mutations/use-delete-post-mutation.ts",
+          "type": "registry:file",
+          "target": "~/.agents/skills/manage-react-server-state/examples/feature-colocated/src/features/posts/server-state/mutations/use-delete-post-mutation.ts"
+        },
+        {
           "path": "cursor/manage-react-server-state.mdc",
           "type": "registry:file",
           "target": "~/.cursor/rules/manage-react-server-state.mdc"
         }
       ],
-      "docs": "The canonical skill is installed under .agents/skills. Cursor receives a thin project rule pointing to that same skill so the architecture is maintained in one place."
+      "docs": "Installs only the adaptive Agent Skill, reference guidance, a non-runtime example, and a thin Cursor rule. It does not write application source files or install runtime dependencies."
     }
   ]
 }
