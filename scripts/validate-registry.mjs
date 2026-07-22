@@ -80,12 +80,21 @@ await stat(resolve(root, ".github/workflows/release-skill.yml"));
 
 const releaseConfigPath = resolve(root, ".releaserc.json");
 const releaseConfig = JSON.parse(await readFile(releaseConfigPath, "utf8"));
+const githubReleasePlugin = releaseConfig.plugins?.find(
+  (plugin) =>
+    Array.isArray(plugin) && plugin[0] === "@semantic-release/github",
+);
+const githubReleaseOptions = githubReleasePlugin?.[1];
 
 if (
   !releaseConfig.branches?.includes("main") ||
-  releaseConfig.tagFormat !== "manage-react-server-state-v${version}"
+  releaseConfig.tagFormat !== "manage-react-server-state-v${version}" ||
+  githubReleaseOptions?.releaseNameTemplate !==
+    "<%= nextRelease.version %>" ||
+  !githubReleaseOptions?.releaseBodyTemplate?.includes("### Changes") ||
+  !githubReleaseOptions?.releaseBodyTemplate?.includes("### Install or update")
 ) {
-  throw new Error("semantic-release branch or tag format is invalid");
+  throw new Error("semantic-release naming or release details are invalid");
 }
 
 const skillPath = resolve(
