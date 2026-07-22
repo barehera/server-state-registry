@@ -1,10 +1,32 @@
-# React Server State Skill Registry
+<div align="center">
+  <h1>🧠 React Server State Skill Registry</h1>
+  <p><strong>One adaptive Agent Skill for type-safe, maintainable React server state.</strong></p>
+  <p>Inspect the project. Respect the backend contract. Compose with the architecture already there.</p>
 
-An adaptive Agent Skill for creating, extending, refactoring, and auditing type-safe React server state. It teaches an AI agent how to make decisions from the consuming repository and the real backend contract instead of copying a fixed application architecture.
+  <p>
+    <a href="https://agentskills.io"><img alt="Agent Skills open standard" src="https://img.shields.io/badge/Agent_Skills-open_standard-7C3AED?style=for-the-badge"></a>
+    <img alt="TanStack Query" src="https://img.shields.io/badge/TanStack_Query-adaptive-FF4154?style=for-the-badge&logo=reactquery&logoColor=white">
+    <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-type_safe-3178C6?style=for-the-badge&logo=typescript&logoColor=white">
+    <img alt="Multi-agent" src="https://img.shields.io/badge/AI_hosts-multi--agent-16A34A?style=for-the-badge">
+    <a href="https://github.com/barehera/server-state-registry/releases"><img alt="Latest release" src="https://img.shields.io/github/v/release/barehera/server-state-registry?display_name=release&style=for-the-badge&color=0EA5E9"></a>
+  </p>
 
-The skill is designed for TanStack Query projects, but it does not force a folder layout, transport client, validation library, authentication provider, response envelope, or pagination format.
+  <p>
+    <a href="#-quick-start">Quick start</a> ·
+    <a href="#-ai-compatibility">AI compatibility</a> ·
+    <a href="#-prompt-cookbook">Prompts</a> ·
+    <a href="#-skill-versions">Releases</a>
+  </p>
+</div>
 
-## Quick start
+---
+
+This registry teaches an AI coding agent how to create, extend, refactor, and audit server state from the consuming repository and its real backend contract. It is designed for TanStack Query projects, but it does not force a folder layout, transport client, validation library, authentication provider, response envelope, or pagination format.
+
+> [!IMPORTANT]
+> An **AI model** and an **AI coding host** are different layers. OpenAI GPT, Claude, Gemini, DeepSeek, Qwen, Mistral, Grok, and Llama-family models can all follow this Markdown skill when their host gives them repository access. Native discovery paths and invocation commands belong to the host—Codex, Claude Code, Gemini CLI, Cursor, Copilot, Antigravity, and similar tools—not to the model API itself.
+
+## ⚡ Quick start
 
 Run this command from the root of a shadcn-configured project:
 
@@ -26,7 +48,10 @@ It does not:
 
 Commit the installed files so every developer and supported AI agent uses the same version of the guidance.
 
-## Verify the installation
+> [!NOTE]
+> The command installs reusable AI guidance only. It does not write application code or add runtime dependencies.
+
+## ✅ Verify the installation
 
 Check that this file exists:
 
@@ -48,13 +73,42 @@ for this task. Load only the references it routes you to, inspect the repository
 before proposing a structure, and do not invent missing backend contracts.
 ```
 
-## Use it in your AI coding tool
+## 🤖 AI compatibility
 
-The repository keeps one canonical skill under `.agents/skills`. Tools that support that open location discover it directly; other tools can read the same file explicitly. This avoids maintaining several copies that can drift.
+The repository keeps one canonical skill under `.agents/skills`. Hosts that support this open location discover it directly. The registry adds only a thin Cursor rule adapter; it does not duplicate the skill for every vendor and create multiple sources of truth.
 
-### Codex app, CLI, and IDE extension
+### Agent host support
 
-Codex discovers repository skills under `.agents/skills` and can activate them implicitly when the request matches the skill description.
+| Agent host | Default registry install | How to activate |
+| --- | --- | --- |
+| **OpenAI Codex** — ChatGPT desktop app, CLI, IDE | 🟢 Native `.agents/skills` discovery | Mention `$manage-react-server-state`, run `/skills`, or describe a matching task |
+| **Google Gemini CLI** | 🟢 Native `.agents/skills` alias | Run `/skills list`, then describe the task or name the skill |
+| **Google Antigravity** — IDE and CLI | 🟢 Native `.agents/skills` discovery | Ask `What skills are available?`; CLI also supports `/skills` |
+| **GitHub Copilot** — VS Code, JetBrains, GitHub, CLI, app | 🟢 Native `.agents/skills` discovery | Automatic matching; Copilot CLI also supports `/manage-react-server-state` |
+| **Cursor** — editor and CLI | 🟣 Agent Skill support plus installed `.cursor/rules` adapter | Use the slash menu, name the skill, or use the portable prompt |
+| **Claude Code** — CLI, IDE, desktop | 🟡 Canonical file is readable; native skills use `.claude/skills` | Use the portable prompt, or install a Claude-native copy instead |
+| **Windsurf, Cline, Roo Code, OpenCode, Continue, Aider, and other file-aware agents** | 🟡 Host-dependent discovery | Use the portable prompt and point the agent to the canonical `SKILL.md` |
+
+**Legend:** 🟢 native canonical discovery · 🟣 registry adapter · 🟡 portable or host-dependent usage
+
+### Model provider support
+
+| Model family | Support | What determines discovery |
+| --- | --- | --- |
+| **OpenAI GPT and Codex models** | ✅ Supported | Codex is native; other GPT-powered hosts use their own skill rules |
+| **Anthropic Claude models** | ✅ Supported | Claude Code uses `.claude/skills`; other Claude-powered hosts may read `.agents/skills` |
+| **Google Gemini models** | ✅ Supported | Gemini CLI and Antigravity both understand the canonical installation |
+| **DeepSeek models** | ✅ Supported through a repository-aware host | DeepSeek is the model provider; the selected coding host supplies repository and skill context |
+| **Qwen, Mistral, Grok, Llama, and other models** | ✅ Supported through a repository-aware host | The host must expose the project files or explicitly load `SKILL.md` |
+
+> [!TIP]
+> If an agent can read repository files, it can use this skill even without native Agent Skill discovery. Do not paste the entire skill into chat—point the agent to `SKILL.md` so it can follow the skill's progressive reference routing.
+
+## 🧭 Use it in your AI coding tool
+
+### OpenAI Codex and ChatGPT desktop
+
+Codex discovers repository skills under `.agents/skills` and can activate them implicitly when the request matches the skill description. This applies to Codex in the ChatGPT desktop app, Codex CLI, and the IDE extension.
 
 For explicit invocation, type `$` and select `manage-react-server-state`, or include it directly in the prompt:
 
@@ -63,37 +117,32 @@ Use $manage-react-server-state to inspect this repository and create the Posts
 server-state implementation from the backend contract below.
 ```
 
-You can also run `/skills` in the CLI or IDE to inspect available skills. If a newly installed skill does not appear, restart Codex. See the official [Codex skills documentation](https://developers.openai.com/codex/skills).
+Run `/skills` in the CLI or IDE to inspect available skills. If a newly installed skill does not appear, restart Codex. A normal model API request or unrelated ChatGPT conversation does not automatically see local repository skills; use a Codex or Work surface that has the project context. See the official [Codex skills documentation](https://developers.openai.com/codex/skills).
 
-### Cursor editor and CLI
+### Google Gemini CLI
 
-Cursor supports Agent Skills in both the editor and CLI and can invoke them automatically or through its slash-command menu. This registry also installs a small `.cursor/rules` adapter so Cursor is directed to the canonical skill when working on query, mutation, or server-state files.
-
-Open Cursor Agent at the project root and either:
-
-- Select `/manage-react-server-state` from the slash-command menu when it is available.
-- Write `Use manage-react-server-state` in the request.
-- Use the portable fallback prompt shown above.
-
-Example:
+Gemini CLI discovers workspace skills from `.gemini/skills` and the `.agents/skills` alias, so the normal registry command is already native.
 
 ```text
-Use manage-react-server-state. Audit the existing bookmarks queries and mutations.
-Report naming, cache identity, contract, cancellation, and authentication problems
-first. Do not edit files yet.
+/skills list
 ```
 
-Cursor documents Agent Skill discovery and slash invocation in its [Agent Skills release notes](https://cursor.com/changelog/2-4).
+If the files were installed during an active session, run `/skills reload`. Then prompt normally:
+
+```text
+Use manage-react-server-state to audit the existing Products server state. Report
+contract and cache-identity problems before changing files.
+```
+
+See the official [Gemini CLI Agent Skills guide](https://geminicli.com/docs/cli/using-agent-skills/).
 
 ### Google Antigravity and Antigravity CLI
 
 Antigravity uses `<project-root>/.agents/skills` for workspace skills, so the default registry installation is already in its native project location.
 
-In Antigravity:
-
 1. Open the consuming project root.
 2. Ask `What skills are available?` to verify discovery.
-3. Describe the server-state task normally or name `manage-react-server-state` explicitly.
+3. Describe the task normally or name `manage-react-server-state` explicitly.
 
 In Antigravity CLI, use `/skills` to list the discovered skills.
 
@@ -103,11 +152,31 @@ Products queries. Preserve the backend response exactly and follow this project'
 current folder structure.
 ```
 
-See Google's [Antigravity Skills codelab](https://codelabs.developers.google.com/getting-started-with-antigravity-skills?hl=en) for the official project and global skill locations.
+See Google's [Antigravity Skills codelab](https://codelabs.developers.google.com/getting-started-with-antigravity-skills?hl=en).
 
-### GitHub Copilot in VS Code, JetBrains, GitHub, and CLI
+### Anthropic Claude Code
 
-GitHub Copilot recognizes `.agents/skills` for project skills. The same checked-in installation can be used by Copilot agent mode in VS Code and JetBrains IDEs, Copilot CLI, the Copilot app, the cloud coding agent, and Copilot code review.
+Claude Code's native project location is `.claude/skills`, while this registry deliberately keeps the cross-agent source of truth in `.agents/skills`.
+
+After the normal registry installation, tell Claude to read the canonical file:
+
+```text
+Read .agents/skills/manage-react-server-state/SKILL.md completely and use it to
+add the Orders server state. Follow its reference routing and inspect the current
+project before editing anything.
+```
+
+If Claude Code is the only agent used in a repository and native `/manage-react-server-state` invocation is preferred, GitHub CLI 2.90 or later can install a host-native copy **instead of** the shadcn command:
+
+```bash
+gh skill install barehera/server-state-registry manage-react-server-state --agent claude-code
+```
+
+Avoid both installation methods unless duplicate host-specific copies are intentional. Claude can activate native skills automatically or through `/skill-name`. See the official [Claude Code skills guide](https://code.claude.com/docs/en/slash-commands).
+
+### GitHub Copilot
+
+GitHub Copilot recognizes `.agents/skills` for project skills. The same checked-in installation works with Copilot agent mode in VS Code and JetBrains IDEs, Copilot CLI, the Copilot app, the cloud coding agent, and Copilot code review.
 
 Copilot can select the skill from its description. In Copilot CLI, invoke it explicitly with:
 
@@ -117,33 +186,37 @@ Copilot can select the skill from its description. In Copilot CLI, invoke it exp
 
 Then provide the task and backend contract. See GitHub's [Agent Skills overview](https://docs.github.com/en/copilot/concepts/agents/about-agent-skills) and [installation guide](https://docs.github.com/en/copilot/how-tos/copilot-on-github/customize-copilot/customize-cloud-agent/add-skills).
 
-### Claude Code
+### Cursor editor and CLI
 
-Claude Code's native project location is `.claude/skills`, while this registry deliberately keeps the shared source of truth in `.agents/skills`.
+Cursor supports Agent Skills in both the editor and CLI and can invoke them automatically or through its slash-command menu. This registry also installs a small `.cursor/rules` adapter that routes server-state tasks to the canonical skill.
 
-After the normal registry installation, use the portable fallback prompt so Claude reads the canonical file directly:
+- Select `/manage-react-server-state` from the slash menu when it is available.
+- Write `Use manage-react-server-state` in the request.
+- Use the portable fallback prompt below.
 
 ```text
-Read .agents/skills/manage-react-server-state/SKILL.md completely and use it to
-add the Orders server state. Follow its reference routing and inspect the current
-project before editing anything.
+Use manage-react-server-state. Audit the existing bookmarks queries and mutations.
+Report naming, cache identity, contract, cancellation, and authentication problems
+first. Do not edit files yet.
 ```
 
-If Claude Code is the only agent used in a repository and native `/manage-react-server-state` invocation is preferred, GitHub CLI 2.90 or later can install the skill for that host instead of the shadcn command:
+See Cursor's official [Agent Skills release notes](https://cursor.com/changelog/2-4).
 
-```bash
-gh skill install barehera/server-state-registry manage-react-server-state --agent claude-code
+### DeepSeek and other model providers
+
+DeepSeek, Qwen, Mistral, Grok, and local Llama-family models do not need separate copies of this skill. Select the model inside a coding host that can read the repository, then use the host's Agent Skill support or the portable prompt. The behavior comes from the canonical instructions and backend facts, not from vendor-specific syntax.
+
+### Universal portable prompt
+
+Use this with any repository-aware agent when automatic discovery is unavailable:
+
+```text
+Read .agents/skills/manage-react-server-state/SKILL.md completely and follow it
+for this task. Load only the references it routes you to, inspect the repository
+before proposing a structure, and do not invent missing backend contracts.
 ```
 
-Do not use both installation methods in the same repository unless duplicate host-specific copies are intentional. Claude can also activate skills automatically or through `/skill-name` when they are installed in its native location. See the official [Claude Code skills guide](https://code.claude.com/docs/en/slash-commands).
-
-### Other IDEs and agents
-
-For Windsurf, Cline, Roo Code, or any agent that can read repository files but does not discover `.agents/skills`, use the portable fallback prompt. The workflow does not depend on a proprietary tool API.
-
-Do not paste the full skill into chat. Point the agent to `SKILL.md`; it will load the relevant reference files only when needed.
-
-## What the skill can do
+## 🧩 What the skill can do
 
 The agent first inspects the repository and builds a project profile from the existing code. It asks only for unresolved backend or architectural facts that materially affect the implementation.
 
@@ -159,7 +232,7 @@ Supported workflows include:
 
 The bundled feature-colocated Posts implementation is a reference, not an application template. The skill also explains how to adapt the responsibilities to layer-oriented, domain-oriented, compact, and generated-client projects.
 
-## Give the agent a useful contract
+## 📦 Give the agent a useful contract
 
 The best result comes from concrete backend facts. Include what is known and let the skill ask only for important gaps:
 
@@ -194,7 +267,7 @@ Constraints:
 
 You do not need to fill every field. Missing information that changes correctness should become a focused question instead of guessed code.
 
-## Example prompts
+## 📝 Prompt cookbook
 
 ### Create a new feature
 
@@ -294,7 +367,7 @@ inputs, abort signals, auth gating, cache effects, duplicate magic defaults, and
 whether hooks preserve caller query-option type safety.
 ```
 
-## Update an installed skill
+## 🔄 Update an installed skill
 
 Re-run the registry command from the consuming project:
 
@@ -304,7 +377,7 @@ npx shadcn@latest add barehera/server-state-registry/manage-react-server-state -
 
 Review the diff before committing. Updating replaces the installed skill/reference files and Cursor adapter; it still does not modify application source files.
 
-## Validate this registry
+## 🛠️ Validate this registry
 
 ```bash
 npm install
@@ -313,7 +386,7 @@ npm run validate
 
 The registry intentionally has no runtime package. Backend schemas, routes, error envelopes, auth adapters, pagination rules, and cache policy belong to each consuming project.
 
-## Skill versions
+## 🚀 Skill versions
 
 Every push to `main`, including a merged pull request, runs `.github/workflows/release-skill.yml`. The workflow validates and builds the registry, then `semantic-release` analyzes Conventional Commits, generates release notes, creates the Git tag and GitHub Release, and attaches the built `manage-react-server-state.json`.
 
