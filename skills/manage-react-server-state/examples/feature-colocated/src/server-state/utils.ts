@@ -107,58 +107,6 @@ export function mergeInfiniteQueryOptions<
   } as InfiniteQueryOptionsWithData<TOptions, TData>;
 }
 
-function parseJsonLine(line: string): unknown {
-  try {
-    return JSON.parse(line) as unknown;
-  } catch (cause) {
-    throw new ApiRequestError({
-      message: "Server stream contained malformed JSON",
-      code: "invalid_stream_response",
-      details: { line },
-      cause,
-    });
-  }
-}
-
-export async function* parseNdjsonStream<TData>(
-  response: Response,
-  parse: (value: unknown) => TData,
-): AsyncGenerator<TData> {
-  if (!response.body) {
-    throw new ApiRequestError({
-      message: "Streaming response has no body",
-      code: "missing_stream_body",
-    });
-  }
-
-  const reader = response.body.getReader();
-  const decoder = new TextDecoder();
-  let buffer = "";
-
-  try {
-    while (true) {
-      const { done, value } = await reader.read();
-      buffer += decoder.decode(value, { stream: !done });
-      const lines = buffer.split("\n");
-      buffer = lines.pop() ?? "";
-
-      for (const line of lines) {
-        if (line.trim()) {
-          yield parse(parseJsonLine(line));
-        }
-      }
-
-      if (done) break;
-    }
-
-    if (buffer.trim()) {
-      yield parse(parseJsonLine(buffer));
-    }
-  } finally {
-    reader.releaseLock();
-  }
-}
-
 export function errorResponse({
   status,
   code,

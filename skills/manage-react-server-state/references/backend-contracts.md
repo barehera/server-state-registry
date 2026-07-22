@@ -1,67 +1,43 @@
 # Backend contracts
 
-## Contract intake
+## Intake
 
-Resolve these values from existing code, API documentation, generated types, or the user before implementation:
+Resolve these from code, generated clients, API documentation, fixtures, or the user:
 
 - HTTP method and exact route
 - path, query, header, and body parameters
-- success payload and status behavior
-- error payload
+- success status and response body
+- error status and body
 - authentication requirement
-- list and pagination envelope fields
-- nullable and optional fields
-- date/string formats
-- streaming protocol and event shape
-- cache effects after mutations
+- nullable versus optional fields and serialized date formats
+- list/pagination envelope and next-page rule
+- affected cache identities after writes
 
-Do not make the frontend define a supposedly universal backend envelope. Shared response builders belong to the project and must match that backend.
+Do not ask the user for information already present in the repository. If several required facts are missing, ask one compact contract question and provide a fill-in shape.
 
-## Zod and TypeScript
+## Contract strategy
 
-- Use Zod at serialized trust boundaries: HTTP responses, persisted external data, route input, and stream events.
-- Infer application data types from schemas with `z.infer`, request inputs with `z.input` when transforms make that distinction useful.
-- Use TypeScript interfaces/types for orchestration values such as filters, `AbortSignal`, query inputs, and cache action inputs.
-- Existing generated backend types may remain the source of truth when the project already trusts and maintains them. Do not add duplicate Zod schemas merely for ceremony; record that runtime validation is absent.
+Choose the strategy already used by the project:
 
-Zod object schemas accept additive unknown response keys under the default object policy and return the declared shape. A backend adding an unrelated key should not break parsing. Missing required fields or incompatible changes must fail with a normalized invalid-response error.
+- Runtime schemas: parse untrusted HTTP and persisted external data; infer TypeScript types when practical.
+- Generated client/types: preserve them as the source of truth and do not duplicate every model in Zod without a stated runtime-validation requirement.
+- Handwritten TypeScript only: preserve it for a scoped endpoint, but identify that runtime response validation is absent when it matters.
 
-## API functions
+With Zod's default object behavior, additive unknown object keys do not fail parsing and are omitted from the parsed value. Missing required fields and incompatible types should fail with the project's normalized invalid-response error.
 
-Keep a flat typed namespace unless the backend truly exposes a nested child-resource service. Use computed canonical operation names where applicable.
+Do not invent a universal `{ data }`, pagination, or error envelope. Shared builders are project-specific and must match the actual backend.
 
-```ts
-export const memoriesApi = {
-  async [memoriesOperationNames.detail]({
-    memoryId,
-    signal,
-  }: MemoryDetailInput) {
-    const response = await api.get<unknown>(
-      memoriesRoutes.detail(memoryId),
-      { signal },
-    );
+## Transport operations
 
-    return parseApiPayload(memoryDetailResponseSchema, response.data);
-  },
-} as const;
-```
-
-- Use `<unknown>` for untrusted responses when runtime parsing establishes the type.
-- Do not add a redundant explicit Promise return type when parsing already infers it accurately.
-- Return the validated backend response unchanged. Let query options select `response.data` only when the hook intentionally exposes the envelope's data field.
-- Encode route identifiers with `encodeURIComponent`.
-- Forward query cancellation through `signal`.
-- Normalize filters only when it creates a stable key/request representation, trims optional text, applies centralized defaults, or enforces backend constraints. Do not normalize ritualistically.
+- Reuse the existing Axios, fetch, GraphQL, RPC, server-action, or generated-client abstraction.
+- Treat network responses as untrusted when runtime parsing establishes the type. With Axios this commonly means `<unknown>` before parsing.
+- Let parsing infer the return type instead of restating a redundant Promise type.
+- Return the validated backend shape unchanged unless the project intentionally maps distinct models.
+- Encode dynamic URL segments and forward cancellation through `AbortSignal` when the transport supports it.
+- Normalize filters only to produce a stable request/key representation, apply centralized policy, or meet backend constraints.
 
 ## Pagination
 
-Treat pagination as backend-owned:
+Keep pagination backend-shaped. Parse the actual page envelope, type the actual page parameter, keep `initialPageParam` and `getNextPageParam` with the infinite-query policy, and return pages unchanged. Never convert every backend to a fictional generic cursor model.
 
-- Parse the backend page envelope exactly.
-- Type the real page parameter (`string`, number, nullable cursor, offset object, etc.).
-- Keep `initialPageParam` and `getNextPageParam` in the infinite query option factory.
-- Return the backend page unchanged; do not reshape it into a generic frontend page.
-
-## Streaming
-
-Match the actual transport: NDJSON, SSE, WebSocket, or chunked text. Parse each serialized event through its schema. Give streams a context key under the collection when they represent a live form of that collection. Do not pretend all streaming protocols use the same helper.
+For streaming endpoints, use the project's established client or a maintained protocol library instead of creating a custom response parser inside the feature example.

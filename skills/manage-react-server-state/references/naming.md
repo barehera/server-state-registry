@@ -1,6 +1,12 @@
 # Naming
 
-## Canonical shared vocabulary
+## Consistency rule
+
+Use one vocabulary inside a project. Inspect existing names before adding another alias. A consistent established project term beats the defaults below; a requested naming migration must update definitions and consumers together.
+
+## Default operation vocabulary
+
+Use this when starting a new convention:
 
 ```ts
 export const resourceQueryNames = {
@@ -16,47 +22,44 @@ export const resourceMutationNames = {
 } as const;
 ```
 
-Extend this vocabulary only for real feature capabilities such as `related`, `comments`, `preferences`, or `stream`. Do not create aliases for the shared operations.
+Extend only for real capabilities such as `related`, `comments`, `preferences`, or `search`. Do not use `detail`, `byId`, `single`, and `item` for the same operation in one project. For a new vocabulary, prefer `detail`.
 
-## Namespace and entity rules
+## Default namespace rules
 
-For a `Memory` entity in the `memories` feature:
+For a `Post` entity in a `posts` domain:
 
-| Concern | Name |
+| Concern | Default |
 | --- | --- |
-| Scope | `memoriesQueryScope` |
-| Feature operations | `memoriesOperationNames` |
-| API namespace | `memoriesApi` |
-| Query keys | `memoriesQueryKeys` |
-| Query options | `memoriesQueries` |
-| Cache namespace | `memoriesCache` |
-| List hook | `useMemoriesListQuery` |
-| Infinite hook | `useMemoriesInfiniteListQuery` |
-| Detail hook | `useMemoryDetailQuery` |
-| Create mutation | `useCreateMemoryMutation` |
-| Detail input | `MemoryDetailInput` or `MemoryDetailQueryInput` |
+| Query scope | `postsQueryScope` |
+| Operations | `postsOperationNames` |
+| Transport namespace | `postsApi` |
+| Query keys | `postsQueryKeys` |
+| Query options | `postsQueries` |
+| Cache actions | `postsCache` |
+| Collection hook | `usePostsListQuery` |
+| Single-resource hook | `usePostDetailQuery` |
+| Mutation hook | `useCreatePostMutation` |
+| Input | `PostDetailInput` or `PostDetailQueryInput` |
 
-Use the plural feature name for namespace objects and collection hooks. Use the singular entity name for data, one-resource hooks, and operation inputs.
+Use plural resource names for collection namespaces and hooks; use the singular entity for one-resource data and mutations.
 
-## Inputs and local results
-
-- Accept one object input: `detail({ memoryId })`, never `detail(memoryId)`.
-- Use `Input`, not `Props`, for non-component operations.
-- Include the operation in input names: `MemoryRelatedQueryInput`, `MemoryUpdateInput`.
-- Mirror hook names at call sites after removing only `use`:
+At call sites, derive the result name from the hook by removing `use` and lowercasing the first letter:
 
 ```ts
-const memoriesListQuery = useMemoriesListQuery({ filters });
-const memoryDetailQuery = useMemoryDetailQuery({ memoryId });
-const createMemoryMutation = useCreateMemoryMutation();
+const postsListQuery = usePostsListQuery({ filters });
+const postDetailQuery = usePostDetailQuery({ postId });
+const createPostMutation = useCreatePostMutation();
 ```
 
-## Cache verbs
+## Inputs and cache verbs
 
-- `setDetail`: write a complete value.
-- `patchDetail`: merge partial data into an existing value.
-- `invalidateDetail`, `invalidateLists`, `invalidateAll`: mark cached data stale.
-- `removeDetail`, `removeLists`, `removeAll`: remove cached entries.
-- `delete`: call the backend deletion endpoint only.
+- Prefer one object input for new public operations, even with one field.
+- Use `Input`, not `Props`, outside React component props.
+- Include the operation when ambiguity exists: `PostRelatedQueryInput`.
+- Use `setDetail` for a complete write and `patchDetail` for a partial merge.
+- Use `invalidate*` to mark stale and `remove*` to erase cache entries.
+- Reserve `delete` for a backend operation.
 
-Do not use `evict` or cache `delete` aliases.
+## Where names live
+
+Use the project's existing central vocabulary mechanism. In a new multi-feature architecture, a small shared names file may define common operation words and each feature may extend it. In a compact project, local constants can be clearer. The invariant is a single source per vocabulary, not a mandatory filename.

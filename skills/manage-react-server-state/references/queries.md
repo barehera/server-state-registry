@@ -1,87 +1,33 @@
 # Queries
 
-## Query-key hierarchy
+## Cache identity
 
-Define key functions directly inside `createQueryKeys`. Use context queries for child reads that belong to a parent cache identity.
+Use the project's existing key strategy. Query Key Factory is a good option when installed, but typed key functions or another consistent factory are valid. Every value that changes the result must appear in a serializable, stable key.
 
-```ts
-export const memoriesQueryKeys = createQueryKeys(memoriesQueryScope, {
-  [memoriesOperationNames.list]: ({ filters }) => ({
-    queryKey: [{ filters }] as const,
-    contextQueries: {
-      [memoriesOperationNames.stream]: null,
-    },
-  }),
-  [memoriesOperationNames.infiniteList]: ({ filters }) =>
-    [{ filters }] as const,
-  [memoriesOperationNames.detail]: ({ memoryId }) => ({
-    queryKey: [memoryId] as const,
-    contextQueries: {
-      [memoriesOperationNames.related]: ({ limit }) =>
-        [{ limit }] as const,
-    },
-  }),
-});
-```
+Keep finite and infinite variants distinct because their cached data shapes differ. Normalize equivalent inputs before key construction. Parent/child context keys are useful for real ownership such as a post detail with related posts; do not add nesting only to make the key look structured.
 
-- Include every value that changes the result in the key.
-- Normalize filters before building the key so equivalent requests share cache identity.
-- Do not place key predicate utilities in `keys.ts`; put them in the feature `utils.ts`.
-- Keep list and infinite-list roots distinct because their cached data shapes differ.
+Keep query-key predicates next to pure key utilities, not mixed into a key declaration file when the project separates those responsibilities.
 
-## Option factories
+## Option factories and hooks
 
-Export one plural namespace such as `memoriesQueries`. Build keys from the key factory and calls from the API namespace.
+For a new architecture, prefer option factories to own `queryKey`, `queryFn`, pagination, and shared policy. Add thin feature hooks when they provide a stable component API, auth composition, typed overrides, or repeated behavior.
 
-- Use `queryOptions` for finite reads.
-- Use `infiniteQueryOptions` for pagination.
-- Keep stale time and shared query policy in the option factory.
-- Keep `queryKey` and `queryFn` protected from consumer overrides.
-- Keep `initialPageParam` and `getNextPageParam` protected for infinite queries.
+If the project consistently consumes option factories directly and needs no hook-specific behavior, preserve that convention. Do not create wrapper hooks solely to satisfy the reference layout.
 
-## Hooks and overrides
-
-Provide one feature hook for every operation even when components could call option factories directly. Hooks preserve a stable component API and hold project-specific behavior without duplication.
-
-```ts
-export function useMemoryDetailQuery<
-  TData = QueryOptionsData<MemoryDetailQueryOptions>,
->({ queryOptions, ...input }: UseMemoryDetailQueryInput<TData>) {
-  return useQuery(
-    mergeQueryOptions<MemoryDetailQueryOptions, TData>({
-      baseOptions: memoriesQueries.detail(input),
-      queryOptions,
-    }),
-  );
-}
-```
-
-Typed overrides must preserve type-changing `select` inference. Consumer options may control presentation and lifecycle behavior such as `enabled`, `select`, refetch policy, or placeholder data. They may not replace `queryKey` or `queryFn`.
+Typed consumer overrides may control presentation and lifecycle behavior such as `enabled`, `select`, placeholder data, and refetch policy. Do not allow them to replace cache identity, backend execution, or infinite-pagination rules accidentally.
 
 ## Authentication
 
-Connect the project's real auth hook once in a shared integration file. Protected feature hooks call `useAuthenticatedQuery` or `useAuthenticatedInfiniteQuery`; public hooks call TanStack directly.
-
-```ts
-const authenticatedQueries = createAuthenticatedQueryHooks({
-  useAuthentication() {
-    const { user } = useAuth();
-    return { isAuthenticated: Boolean(user) };
-  },
-});
-
-export const useAuthenticatedQuery =
-  authenticatedQueries.useAuthenticatedQuery;
-export const useAuthenticatedInfiniteQuery =
-  authenticatedQueries.useAuthenticatedInfiniteQuery;
-```
-
-The authenticated wrapper must combine auth state with the consumer's condition:
+Use the project's real authentication source. Centralize auth gating once when multiple protected queries need it. Combine authentication with consumer conditions:
 
 ```ts
 enabled: isAuthenticated && (options.enabled ?? true)
 ```
 
-It must also replace `queryFn` with TanStack Query's `skipToken` while logged out. This blocks automatic requests and prevents manual refetch from executing the protected backend function. Backend authorization remains mandatory.
+For TanStack Query, use `skipToken` or another mechanism that also prevents an imperative refetch from calling the protected function while unauthenticated. Frontend gating only avoids unnecessary calls; backend authorization remains required.
 
-Do not export both `useMemoryRelatedQuery` and `useAuthenticatedMemoryRelatedQuery`. Choose the correct policy inside the single feature hook.
+Expose one hook per operation with the correct policy. Do not create public and authenticated aliases for an endpoint that is always protected.
+
+## Selection and server shape
+
+Transport functions should normally return parsed backend responses unchanged. Query options may select the part exposed to components, such as `response.data`, when that is an intentional project API. Keep infinite pages intact unless a selector explicitly derives a view.

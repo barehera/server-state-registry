@@ -5,15 +5,14 @@ import {
   resourceOperationNames,
 } from "@/server-state/names";
 
-export const memoriesQueryScope = "memories";
+export const postsQueryScope = "posts";
 
-export const memoriesOperationNames = {
+export const postsOperationNames = {
   ...resourceOperationNames,
   related: "related",
-  stream: "stream",
 } as const;
 
-export const memoriesCacheActionNames = {
+export const postsCacheActionNames = {
   setDetail: resourceCacheWriteNames.setDetail,
   patchDetail: resourceCacheWriteNames.patchDetail,
   invalidateLists: resourceCacheInvalidationNames.invalidateLists,
